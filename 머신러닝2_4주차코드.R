@@ -71,3 +71,29 @@ result2 <- lm(Diabetes ~ ., data = df2)
 cand <- influencePlot(result2, id = list(n = 3))
 #max Cook's D < 0.5 → 영향점 없음, 0.5~1 → 확인, > 1 → 영향점
 max(cooks.distance(result2))
+
+#다중공선성(변수의 중복성) : 10이상 GVIF^(1/(2*DF))
+vif_values<-vif(result)
+
+print(vif_values)
+#그래프와 상관계수를 그려주는 것이 좋을거 같음
+
+selected_predictors<-names(vif_values[vif_values > 7]) #서로가 영향을 주는 변수 추출 후 임의로 제거 필요
+print(selected_predictors)
+
+df<-read.csv("diabetes.csvv", header = TRUE, na=".")
+result<-lm(df$Diabetes ~ ., data = df)
+
+#AIC(Akaike information criterion) AIC값이 줄어들면 그 변수는 의미가 있음
+library("MASS")
+
+#후진소거법
+result_bk = lm(df$Diabetes ~., data = df)
+Df_fit_bk = stepAIC(result_bk, direction= "backward' , trace = T) #trace 하나씩 빼는 과정을 보여줌
+
+#단계적선택법
+Df_fit_st = stepAIC(result_bk, direction = "both' , trace = T)
+
+#전진선택법
+result_fw = lm(df$Diabetes ~1, data = df)
+Df_fit_fk = stepAIC(result_fw, direction="forward", scope = (backward 변수 카피), trace = T)
