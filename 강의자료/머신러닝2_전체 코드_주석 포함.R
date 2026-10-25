@@ -32,7 +32,7 @@ result_pearson$r #상관관계 계수
 
 # [공부용 추가] 1. 머신러닝2_단순회귀분석.pdf / 39쪽 / 첫 번째 실습
 #데이터 불러오기
-train_data<-read.csv("C:/R/R_data/01.simple_train_data.csv")
+train_data<-read.csv("C:/R studio/R_data/01.simple_train_data.csv")
 
 #산점도
 library(ggplot2)
@@ -54,7 +54,7 @@ residuals(model)
 
 # [공부용 추가] 1. 머신러닝2_단순회귀분석.pdf / 42쪽 / 두 번째 실습
 #데이터 불러오기
-train_data<-read.csv("C:/R/R_data/01.simple_train_2.csv")
+train_data<-read.csv("C:/R studio/R_data/01.simple_train_2.csv")
 
 #산점도
 library(ggplot2)
@@ -88,8 +88,8 @@ result_pearson$r #상관관계 계수
 
 # [공부용 추가] 1. 머신러닝2_단순회귀분석.pdf / 73~75쪽 / 예측과 RMSE
 #데이터 불러오기
-train_data<-read.csv("C:/R/R_data/01.simple_train_data.csv")
-test_data<-read.csv("C:/R/R_data/01.simple_test_data.csv")
+train_data<-read.csv("C:/R studio/R_data/01.simple_train_data.csv")
+test_data<-read.csv("C:/R studio/R_data/01.simple_test_data.csv")
 
 #회귀분석 모델
 model<-lm(upper_arm ~ thigh, data = train_data)
@@ -131,7 +131,7 @@ library(rstatix)
 library(skimr)
 
 #데이터 불러오기
-df<-read.csv("C:/R/R_data/02.diabetes.csv", header = TRUE, stringsAsFactors = TRUE)
+df<-read.csv("C:/R studio/R_data/02.diabetes.csv", header = TRUE, stringsAsFactors = TRUE)
 skim(df)
 
 #결측값 제거
@@ -164,7 +164,7 @@ loaded_model<-readRDS("regression_model.rds")
 
 # [공부용 추가] 2. 머신러닝2_다중회귀분석.pdf / 15~16쪽 / 예측과 RMSE
 #데이터를 CSV에서 불러오기
-new_data<-read.csv("C:/R/R_data/02.diabetes_test.csv")
+new_data<-read.csv("C:/R studio/R_data/02.diabetes_test.csv")
 
 #모델에 새로운 데이터 추가
 predicted<-predict(loaded_model, newdata=new_data)
@@ -259,7 +259,7 @@ print(selected_predictors)
 
 
 # [공부용 추가] 2. 머신러닝2_다중회귀분석.pdf / 36~37쪽 / AIC 변수선택
-df<-read.csv("C:/R/R_data/02.diabetes.csv", header = TRUE, na=".")
+df<-read.csv("C:/R studio/R_data/02.diabetes.csv", header = TRUE, na=".")
 result<-lm(df$Diabetes ~., data=df)
 
 library("MASS")
