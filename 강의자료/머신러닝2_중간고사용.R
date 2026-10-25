@@ -10,9 +10,9 @@ df<-data.frame(
 
 ggplot(df, aes(x=group, y=values)) +
   geom_boxplot(fill=c("lightblue", "lightgreen"), outlier.color="red") +
-  labs(title="Boxplot Example") +
-  xlab("Group") +
-  ylab("Values")
+  labs(title=" ") +
+  xlab(" ") +
+  ylab(" ")
 
 
 heights<-c(160, 162, 155, 180, 170, 175, 165, 171, 177, 172)
@@ -28,15 +28,15 @@ result_pearson$r
 
 
 
-train_data<-read.csv("C:/R/R_data/01.simple_train_data.csv")
+train_data<-read.csv("C:/R studio/R_data/01.simple_train_data.csv")
 
 library(ggplot2)
 
 ggplot(train_data, aes(x=thigh, y =upper_arm)) +
   geom_point(alpha = 0.7) +
-  labs(title = "대퇴부 vs 상박부 산점도", 
-       x = "대퇴부 둘레 (thigh, cm)",
-       y = "상박부 둘레 (upper_arm, cm)" ) +
+  labs(title = " vs ", 
+       x = " (thigh, cm)",
+       y = " (upper_arm, cm)" ) +
   theme_minimal()
 
 model<-lm(upper_arm ~ thigh, data = train_data)
@@ -45,15 +45,15 @@ summary(model)
 residuals(model)
 
 
-train_data<-read.csv("C:/R/R_data/01.simple_train_2.csv")
+train_data<-read.csv("C:/R studio/R_data/01.simple_train_2.csv")
 
 library(ggplot2)
 
 ggplot(train_data, aes(x=thigh, y=upper_arm)) +
   geom_point(alpha=0.7) +
-  labs(title = "대퇴부 vs 상박부 산점도", 
-       x = "대퇴부 둘레(thigh, cm)",
-       y = "상박부 둘레(upper_arm, cm)")+
+  labs(title = " vs ", 
+       x = " (thigh, cm)",
+       y = " (upper_arm, cm)")+
   theme_minimal()
 
 model<-lm(upper_arm ~ thigh, data=train_data)
@@ -72,8 +72,8 @@ result_pearson$p
 result_pearson$r
 
 
-train_data<-read.csv("C:/R/R_data/01.simple_train_data.csv")
-test_data<-read.csv("C:/R/R_data/01.simple_test_data.csv")
+train_data<-read.csv("C:/R studio/R_data/01.simple_train_data.csv")
+test_data<-read.csv("C:/R studio/R_data/01.simple_test_data.csv")
 
 model<-lm(upper_arm ~ thigh, data = train_data)
 summary(model)
@@ -88,9 +88,9 @@ head(predicted)
 ggplot(train_data, aes(x=thigh, y=upper_arm)) +
   geom_point(color = "blue", alpha = 0.6) +
   geom_smooth(method = "lm", color="red", se=FALSE) +
-  labs(title="대퇴부 vs 상박부 회귀분석",
-       x = "대퇴부 둘레(cm)",
-       y = "상박부 둘레(cm)")
+  labs(title=" vs ",
+       x = " (cm)",
+       y = " (cm)")
 
 results<-data.frame(Actual = test_data$upper_arm, Predicted=predicted)
 
@@ -108,7 +108,7 @@ install.packages("skimr")
 library(rstatix)
 library(skimr)
 
-df<-read.csv("C:/R/R_data/02.diabetes.csv", header = TRUE, stringsAsFactors = TRUE)
+df<-read.csv("C:/R studio/R_data/02.diabetes.csv", header = TRUE, stringsAsFactors = TRUE)
 skim(df)
 
 df<-na.omit(df)
@@ -130,7 +130,7 @@ saveRDS(result, "regression_model.rds")
 loaded_model<-readRDS("regression_model.rds")
 
 
-new_data<-read.csv("C:/R/R_data/02.diabetes_test.csv")
+new_data<-read.csv("C:/R studio/R_data/02.diabetes_test.csv")
 
 predicted<-predict(loaded_model, newdata=new_data)
 head(predicted)
@@ -150,9 +150,9 @@ ggplot(df, aes(x=Fitted, y=Residuals))+
   geom_point(alpha = 0.6) +
   geom_smooth(method = "loess", se = FALSE, color = "blue") +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
-  labs(title = "Residuals vs Fitted (선형성 확인)",
-       x = "적합값 (Fitted Values)",
-       y = "잔차 (Residuals)") +
+  labs(title = " vs ",
+       x = " ( )",
+       y = " ( )") +
   theme_minimal()
 
 
@@ -161,9 +161,9 @@ StdResid<-sqrt(abs(Residuals))
 ggplot(df, aes(x=Fitted, y=StdResid)) +
   geom_point(alpha = 0.6) +
   geom_smooth(method = "loess", se = FALSE, color = "blue") +
-  labs(title = "Scale-Location Plot (등분산성 확인)",
-       x = "적합값 (Fitted Values)",
-       y = "Standardized Residuals") +
+  labs(title = "  ( )",
+       x = "  ( )",
+       y = " ") +
   theme_minimal()
 
 
@@ -207,7 +207,7 @@ selected_predictors<-names(vif_values[vif_values>7])
 print(selected_predictors)
 
 
-df<-read.csv("C:/R/R_data/02.diabetes.csv", header = TRUE, na=".")
+df<-read.csv("C:/R studio/R_data/02.diabetes.csv", header = TRUE, na=".")
 
 result<-lm(df$Diabetes ~., data=df)
 
@@ -219,4 +219,4 @@ Df_fit_bk=stepAIC(result_bk, direction = "backward", trace = T)
 Df_fit_st= stepAIC(result_bk, direction = "both", trace = T)
 
 result_fw=lm(df$Diabetes ~ 1, data = df)
-Df_fit_fk=stepAIC(result_fw, direction = "forward", scope = (backward 변수카피), trace = T)
+Df_fit_fk=stepAIC(result_fw, direction = "forward", scope = ( ), trace = T)
