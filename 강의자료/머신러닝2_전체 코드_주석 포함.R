@@ -273,3 +273,106 @@ Df_fit_st= stepAIC(result_bk, direction = "both", trace = T)
 #전진선택법
 result_fw=lm(df$Diabetes ~ 1, data = df)
 Df_fit_fk=stepAIC(result_fw, direction = "forward", scope = (backward 변수카피), trace = T)
+
+
+#10주차
+#로지스틱 회귀분석
+install.packages("GGally")
+library(GGally)
+library(skimr)
+install.packages("tidyverse")
+library(tidyverse)
+install.packages("tidymodels")
+library(tidymodels)
+install.packages("caret")
+library(caret)
+
+df<-read.csv("C:/Users/USER/Desktop/03.로지스틱회귀분석/UniversalBank.csv", header=TRUE, na=".")
+skim(df)
+
+df$Personal.Loan<-ifelse(df$Personal.Loan==1, "yes", "no")
+df$Personal.Loan<-as.factor(df$Personal.Loan)
+
+df<-select(df, -c(Securities.Account, CD.Account, Online, CreditCard, ID, ZIP.Code)) #불필요한 변수(0과 1로 이루어진 변수) 여러개 제거
+trainIndex<-createDataPartition(df$Personal.Loan, p=0.8, list=FALSE)
+train_data<-df[trainIndex,]
+test_data<-df[-trainIndex,]
+
+result1=glm(train_data$Personal.Loan ~1, data=train_data, family = "binomial")
+result2=glm(train_data$Personal.Loan ~., data=train_data, family = "binomial")
+
+anova(result1, result2, test="Chisq") # 모델 전체가 유의한가?
+
+summary(result2)
+
+# broom 패키지 설치 및 로드
+install.packages("broom")
+library(broom)
+
+#기존 코드 실행
+tidy_result<-tidy(result2)
+tidy_result<-mutate_if(tidy_result, is.numeric, round, 3)
+
+print(tidy_result)
+
+library(car)
+library(broom)
+library(dplyr)
+
+#독립성 검정
+durbinWatsonTest(result2)
+
+#다중공선성(변수의 중복성)
+vif(result2)
+
+#다중공선성 위배 변수(Age, Experience)를 제거 후 다시 분석
+result=glm(Personal.Loan~Income + Family + CCAvg + Education + Mortgage,
+           data = train_data,
+           family = "binomial")
+
+#(선택사항) 다시 VIF를 확인하여 10 이하로 떨어졌는지 거믕
+vif(result)
+
+#Cook's distance 계산 (glm에도 사용 가능)
+influencePlot(result, id.method="identify")
+
+#모델 저장
+saveRDS(result, file = "logistic_model.rds")
+
+#모델 로드
+Load<-readRDS("logistic_model.rds")
+
+tidy_result<-tidy(Load)
+tidy_result
+
+tidy_result<-mutate_if(tidy_result, is.numeric, round, 3)
+tidy_result
+
+#로지스틱 회귀분석(ROC)
+library(pROC)
+library(caret)
+library(e1071)
+
+#Test 데이터셋 결과
+test_predictions<-predict(result, newdata = test_data, type = "response")
+print(test_predictions)
+
+predicted_class<-ifelse(test_predictions > 0.5, "yes", "no")
+predicted_class<-as.factor(predicted_class)
+print(predicted_class)
+
+#모델의 Confusion matrix
+confusion_matrix<-confusionMatrix(predicted_class, test_data$Personal.Loan)
+confusion_matrix
+
+#Mcnemar's Test P-value(혼동행렬에서 오류가 비대칭인지 파악 : 0.05보다 크면 데이터가 대칭적)
+#Kappa(데이터가 한쪽이 많을 때, 한쪽의 값을 도출해도 정화도가 높기 때문에 우연으로 맞춰는지 실제로 맞췄느지를 평가함)
+#Kappa값이 1에 가까울 수록 좋은 모델, -값을 가지면 무작위로 예측하는것보다 정확도가 낮다는 의미(과적합 판단)
+
+#ROC curve and AUC
+roc_curve<-roc(test_data$Personal.Loan, test_predictions)
+plot(roc_curve)
+auc(roc_curve)
+
+#새로운 데이터를 활용한 모델 적용
+df_test<-read.csv("C:/Users/USER/Desktop/03.로지스틱회귀분석/UniversalBank_test.csv", header = TRUE)
